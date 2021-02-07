@@ -1,0 +1,11 @@
+.element {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 280px;
+  background: #fff;
+  border-radius: 10px;
+  object-fit: cover;
+  position: relative;
+}

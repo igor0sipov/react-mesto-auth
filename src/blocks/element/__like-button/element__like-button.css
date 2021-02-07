@@ -1,0 +1,15 @@
+.element__like-button {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: url(../../../images/heart-button.svg);
+  background-position: top left;
+  transition: opacity .2s ease-out;
+}
+
+.element__like-button:hover {
+  opacity: .6;
+}

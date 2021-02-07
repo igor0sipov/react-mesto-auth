@@ -1,0 +1,9 @@
+.profile__edit-avatar-icon {
+  opacity: 0;
+  transition: .2s ease-in;
+}
+
+.profile__avatar-wrapper:hover .profile__edit-avatar-icon {
+  opacity: 1;
+  z-index: 3;
+}

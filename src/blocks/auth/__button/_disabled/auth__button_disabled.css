@@ -1,0 +1,7 @@
+.auth__button_disabled {
+  background: none;
+  border: 1px solid white;
+  color: white;
+  opacity: .3;
+  pointer-events: none;
+}

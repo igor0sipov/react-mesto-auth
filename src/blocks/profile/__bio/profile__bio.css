@@ -1,0 +1,29 @@
+.profile__bio {
+  max-width: 440px;
+  margin: 16px 0 0;
+  padding: 0;
+  text-overflow: ellipsis; /* edited */
+  overflow: hidden;
+  grid-area: bio;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.22;
+  color: white;
+}
+
+@media screen and (max-width: 779px) {
+  .profile__bio {
+    max-width: 70vw;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .profile__bio {
+    margin: 14px 0 0;
+
+    font-size: 14px;
+    line-height: 1.21;
+  }
+}

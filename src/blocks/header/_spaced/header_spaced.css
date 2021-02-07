@@ -1,0 +1,10 @@
+.header_spaced {
+  box-sizing: border-box;
+  padding-top: 45px;
+}
+
+@media screen and (max-width: 780px) {
+  .header_spaced {
+    padding-top: 28px;
+  }
+}

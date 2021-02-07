@@ -1,0 +1,12 @@
+.header__user-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6px;
+}
+
+@media screen and (max-width: 879px) {
+  .header__user-menu {
+    margin-right: 30px;
+  }
+}
