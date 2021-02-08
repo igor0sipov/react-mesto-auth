@@ -8,36 +8,9 @@ function Register(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    props
-      .onSubmit({ email: email.value, password: password.value })
-      .then((data) => {
-        console.log(data);
-        props.setIsInfoPopupOpened({
-          state: true,
-          status: true,
-        });
-        setTimeout(() => {
-          props.setIsInfoPopupOpened({
-            state: false,
-            status: true,
-          });
-          props.history.push("/sign-in");
-        }, 2000);
-      })
-      .catch((err) => {
-        console.log(err);
-        props.setIsInfoPopupOpened({
-          state: true,
-          status: false,
-        });
-        setTimeout(() => {
-          props.setIsInfoPopupOpened({
-            state: false,
-            status: false,
-          });
-        }, 2000);
-      });
+    props.onSubmit({ email: email.value, password: password.value }, props);
   }
+
   function handleEmailChange(e) {
     setEmail({
       value: e.target.value,
@@ -74,6 +47,7 @@ function Register(props) {
           minLength="2"
           maxLength="30"
           required
+          value={email.value}
         />
         <span
           className={`auth__input-error ${
@@ -91,6 +65,7 @@ function Register(props) {
           minLength="2"
           maxLength="30"
           required
+          value={password.value}
         />
         <span
           className={`auth__input-error ${

@@ -3,4 +3,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
+  padding: 60px 0 50px;
+}
+
+@media screen and (max-width: 780px) {
+  .auth {
+    padding: 40px 0 35px;
+  }
 }

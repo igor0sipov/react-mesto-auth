@@ -38,7 +38,7 @@ function EditProfilePopup(props) {
   React.useEffect(() => {
     setName({ value: user.name, isValid: true });
     setDescription({ value: user.about, isValid: true });
-  }, [user]);
+  }, [user, props.isOpened]);
 
   React.useEffect(() => {
     if (name.isValid && description.isValid) {

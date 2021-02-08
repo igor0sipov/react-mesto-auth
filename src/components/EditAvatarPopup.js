@@ -2,13 +2,12 @@ import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup(props) {
-  const avatarInputRef = React.useRef();
   const [avatar, setAvatar] = React.useState({ value: "" });
   const [isFormValid, setIsFormValid] = React.useState(false);
 
   function handleClick(e) {
     e.preventDefault();
-    props.onUpdateAvatar(avatarInputRef.current.value);
+    props.onUpdateAvatar(avatar.value);
   }
 
   function handleChange(e) {
@@ -45,7 +44,6 @@ function EditAvatarPopup(props) {
       onOverlay={props.onOverlay}
     >
       <input
-        ref={avatarInputRef}
         type="url"
         className="popup__input"
         id="container-avatar"
