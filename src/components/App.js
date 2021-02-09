@@ -290,7 +290,7 @@ function App() {
           <Login onSubmit={handleSignIn} />
         </Route>
         <ProtectedRoute
-          path="/"
+          exact path="/"
           component={Main}
           cards={cards}
           loggedIn={loggedIn}
