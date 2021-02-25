@@ -2,33 +2,31 @@ import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup(props) {
-  const [avatar, setAvatar] = React.useState({ value: "" });
+  const [inputs, setInputs] = React.useState({
+    avatar: { value: "" },
+  });
   const [isFormValid, setIsFormValid] = React.useState(false);
 
   function handleClick(e) {
     e.preventDefault();
-    props.onUpdateAvatar(avatar.value);
+    props.onUpdateAvatar(inputs.avatar.value);
   }
 
-  function handleChange(e) {
-    setAvatar({
-      value: e.target.value,
-      isValid: e.target.validity.valid,
-      validationMessage: e.target.validationMessage,
-    });
+  function handleInputChange(e) {
+    props.setValues(inputs, setInputs, e);
   }
 
   React.useEffect(() => {
-    if (avatar.isValid) {
+    if (inputs.avatar.isValid) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
-  }, [avatar.isValid]);
+  }, [inputs.avatar.isValid]);
 
   React.useEffect(() => {
     if (!props.isOpened) {
-      setAvatar({ value: "" });
+      setInputs({ avatar: { value: "" } });
     }
   }, [props.isOpened]);
 
@@ -44,23 +42,22 @@ function EditAvatarPopup(props) {
       onOverlay={props.onOverlay}
     >
       <input
+        name="avatar"
         type="url"
         className="popup__input"
-        id="container-avatar"
-        name="avatar"
         placeholder="Ссылка на аватар"
         required
         minLength="2"
         maxLength="200"
-        value={avatar.value}
-        onChange={handleChange}
+        value={inputs.avatar.value}
+        onChange={handleInputChange}
       />
       <span
-        className={`popup__input-error container-avatar-error ${
-          avatar.isValid ? `` : `popup__input-error_visible`
+        className={`popup__input-error ${
+          inputs.avatar.isValid ? `` : `popup__input-error_visible`
         }`}
       >
-        {avatar.validationMessage}
+        {inputs.avatar.validationMessage}
       </span>
     </PopupWithForm>
   );

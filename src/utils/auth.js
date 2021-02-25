@@ -1,6 +1,8 @@
+import baseUrl from "./config";
+
 class Auth {
   constructor() {
-    this._baseUrl = "https://auth.nomoreparties.co";
+    this._baseUrl = baseUrl;
   }
 
   _handleOriginalResponse(result) {
@@ -13,6 +15,7 @@ class Auth {
   signIn({ email, password }) {
     return fetch(this._baseUrl + "/signin", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -25,7 +28,7 @@ class Auth {
       .then((data) => data.json());
   }
 
-  signUp({ email, password }) {
+  signUp({ email, password, name, about, avatar }) {
     return fetch(this._baseUrl + "/signup", {
       method: "POST",
       headers: {
@@ -34,21 +37,31 @@ class Auth {
       body: JSON.stringify({
         email,
         password,
+        name,
+        about,
+        avatar,
       }),
     })
       .then(this._handleOriginalResponse)
       .then((data) => data.json());
   }
 
-  getUser(jwt) {
+  getUser() {
     return fetch(this._baseUrl + "/users/me", {
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
       },
     })
       .then(this._handleOriginalResponse)
       .then((data) => data.json());
+  }
+
+  logout() {
+    return fetch(this._baseUrl + "/signout", {
+      method: "POST",
+      credentials: "include",
+    });
   }
 }
 

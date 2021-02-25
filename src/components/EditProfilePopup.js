@@ -4,49 +4,38 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function EditProfilePopup(props) {
   const user = React.useContext(CurrentUserContext);
-  const [name, setName] = React.useState({ value: user.name, isValid: true });
-  const [description, setDescription] = React.useState({
-    value: user.about,
-    isvalid: true,
+  const [inputs, setInputs] = React.useState({
+    name: { value: user.name, isValid: true },
+    about: { value: user.about, isvalid: true },
   });
   const [isFormValid, setIsFormValid] = React.useState(false);
+
+  function handleInputChange(e) {
+    props.setValues(inputs, setInputs, e);
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
     props.onUpdateUser({
-      name: name.value,
-      about: description.value,
-    });
-  }
-
-  function handleNameChange(e) {
-    setName({
-      value: e.target.value,
-      isValid: e.target.validity.valid,
-      validationMessage: e.target.validationMessage,
-    });
-  }
-
-  function handleDescriptionChange(e) {
-    setDescription({
-      value: e.target.value,
-      isValid: e.target.validity.valid,
-      validationMessage: e.target.validationMessage,
+      name: inputs.name.value,
+      about: inputs.about.value,
     });
   }
 
   React.useEffect(() => {
-    setName({ value: user.name, isValid: true });
-    setDescription({ value: user.about, isValid: true });
+    setInputs({
+      name: { value: user.name, isValid: true },
+      about: { value: user.about, isValid: true },
+    });
   }, [user, props.isOpened]);
 
   React.useEffect(() => {
-    if (name.isValid && description.isValid) {
+    if (inputs.name.isValid && inputs.about.isValid) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
-  }, [name.isValid, description.isValid]);
+  }, [inputs.name.isValid, inputs.about.isValid]);
 
   return (
     <PopupWithForm
@@ -60,42 +49,40 @@ function EditProfilePopup(props) {
       onOverlay={props.onOverlay}
     >
       <input
+        name="name"
         type="text"
         className="popup__input"
-        id="container-name"
-        name="name"
         placeholder="Имя"
         required
         minLength="2"
         maxLength="40"
-        value={name.value}
-        onChange={handleNameChange}
+        value={inputs.name.value}
+        onChange={handleInputChange}
       />
       <span
-        className={`popup__input-error container-name-error ${
-          name.isValid ? `` : `popup__input-error_visible`
+        className={`popup__input-error ${
+          inputs.name.isValid ? `` : `popup__input-error_visible`
         }`}
       >
-        {name.validationMessage}
+        {inputs.name.validationMessage}
       </span>
       <input
+        name="about"
         type="text"
         className="popup__input"
-        id="container-bio"
-        name="bio"
         placeholder="О себе"
         required
         minLength="2"
         maxLength="200"
-        value={description.value}
-        onChange={handleDescriptionChange}
+        value={inputs.about.value}
+        onChange={handleInputChange}
       />
       <span
-        className={`popup__input-error container-name-error ${
-          description.isValid ? `` : `popup__input-error_visible`
+        className={`popup__input-error ${
+          inputs.about.isValid ? `` : `popup__input-error_visible`
         }`}
       >
-        {description.validationMessage}
+        {inputs.about.validationMessage}
       </span>
     </PopupWithForm>
   );

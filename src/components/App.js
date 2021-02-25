@@ -18,32 +18,6 @@ import DeleteConfirmPopup from "./DeleteConfirmPopup";
 import ImagePopup from "./ImagePopup";
 
 function App() {
-  function handleError(error) {
-    console.log(error);
-  }
-
-  React.useEffect(() => {
-    if (localStorage.getItem("token")) {
-      const token = localStorage.getItem("token");
-      auth
-        .getUser(token)
-        .then((user) => {
-          setCurrentEmail(user.data.email);
-          setLoggedIn(true);
-        })
-        .catch(handleError);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getCards()])
-      .then(([userInfo, cards]) => {
-        setCurrentUser(userInfo);
-        setCards(cards);
-      })
-      .catch(handleError);
-  }, []);
-
   //============================================constants================================================
   const saveText = "Сохранить";
   const savingText = "Сохранение...";
@@ -81,15 +55,51 @@ function App() {
   const [isImagePopupOpened, setIsImagePopupOpened] = React.useState(false);
   const [isDeletePopupOpened, setIsDeletePopupOpened] = React.useState(false);
 
+  function handleError(error) {
+    console.log(error);
+  }
+
+  React.useEffect(() => {
+    auth
+      .getUser()
+      .then((user) => {
+        setCurrentEmail(user.email);
+        setLoggedIn(true);
+      })
+      .catch(handleError);
+  }, []);
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      Promise.all([auth.getUser(), api.getCards()])
+        .then(([userInfo, cards]) => {
+          setCurrentUser(userInfo);
+          setCards(cards.reverse());
+        })
+        .catch(handleError);
+    }
+  }, [loggedIn]);
+
+  function setInputsValues(inputsState, inputsSetter, event) {
+    const name = event.target.name;
+    inputsSetter({
+      ...inputsState,
+      [name]: {
+        value: event.target.value,
+        isValid: event.target.validity.valid,
+        validationMessage: event.target.validationMessage,
+      },
+    });
+  }
+
   //===========================================auth========================================
   function handleSignIn({ email, password }, props) {
     auth
       .signIn({ email, password })
-      .then((data) => {
+      .then(() => {
         setCurrentEmail(email);
         setLoggedIn(true);
         props.history.push("/");
-        localStorage.setItem("token", data.token);
       })
       .catch((err) => {
         console.log(err);
@@ -106,9 +116,9 @@ function App() {
       });
   }
 
-  function handleSignUp({ email, password }, props) {
+  function handleSignUp({ email, password, name, about, avatar }, props) {
     auth
-      .signUp({ email, password })
+      .signUp({ email, password, name, about, avatar })
       .then(() => {
         setIsInfoPopupOpened({
           state: true,
@@ -138,9 +148,13 @@ function App() {
   }
 
   function handleSignOut() {
-    setLoggedIn(false);
-    localStorage.removeItem("token");
-    setCurrentEmail("");
+    auth
+      .logout()
+      .then(() => {
+        setLoggedIn(false);
+        setCurrentEmail("");
+      })
+      .catch(handleError);
   }
 
   //===========================================profile========================================
@@ -177,7 +191,6 @@ function App() {
   }
 
   //===========================================popups========================================
-
   function closeAllPopups() {
     setIsEditAvatarPopupOpened(false);
     setEditProfilePopupOpened(false);
@@ -284,13 +297,15 @@ function App() {
           <Register
             onSubmit={handleSignUp}
             setIsInfoPopupOpened={setIsInfoPopupOpened}
+            setValues={setInputsValues}
           />
         </Route>
         <Route path="/sign-in">
-          <Login onSubmit={handleSignIn} />
+          <Login onSubmit={handleSignIn} setValues={setInputsValues} />
         </Route>
         <ProtectedRoute
-          exact path="/"
+          exact
+          path="/"
           component={Main}
           cards={cards}
           loggedIn={loggedIn}
@@ -302,6 +317,7 @@ function App() {
           handleCardLike={handleCardLike}
         />
         <EditProfilePopup
+          setValues={setInputsValues}
           isOpened={isEditProfilePopupOpened}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
@@ -310,6 +326,7 @@ function App() {
         />
 
         <AddPlacePopup
+          setValues={setInputsValues}
           isOpened={isAddPlacePopupOpened}
           onClose={closeAllPopups}
           onSubmit={handleAddCard}
@@ -318,6 +335,7 @@ function App() {
         />
 
         <EditAvatarPopup
+          setValues={setInputsValues}
           isOpened={isEditAvatarPopupOpened}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}

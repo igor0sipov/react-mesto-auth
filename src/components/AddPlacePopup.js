@@ -2,42 +2,35 @@ import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup(props) {
-  const [name, setName] = React.useState({ value: "" });
-  const [link, setLink] = React.useState({ value: "" });
+  const [inputs, setInputs] = React.useState({
+    name: { value: "" },
+    link: { value: "" },
+  });
   const [isFormValid, setIsFormValid] = React.useState(false);
+
+  function handleInputChange(e) {
+    props.setValues(inputs, setInputs, e);
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onSubmit({ name: name.value, link: link.value });
-  }
-  function handleNameChange(e) {
-    setName({
-      value: e.target.value,
-      isValid: e.target.validity.valid,
-      validationMessage: e.target.validationMessage,
-    });
-  }
-
-  function handleLinkChange(e) {
-    setLink({
-      value: e.target.value,
-      isValid: e.target.validity.valid,
-      validationMessage: e.target.validationMessage,
-    });
+    props.onSubmit({ name: inputs.name.value, link: inputs.link.value });
   }
 
   React.useEffect(() => {
-    if (name.isValid && link.isValid) {
+    if (inputs.name.isValid && inputs.link.isValid) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
-  }, [name.isValid, link.isValid]);
+  }, [inputs.name.isValid, inputs.link.isValid]);
 
   React.useEffect(() => {
     if (!props.isOpened) {
-      setName({ value: "" });
-      setLink({ value: "" });
+      setInputs({
+        name: { value: "" },
+        link: { value: "" },
+      });
     }
   }, [props.isOpened]);
 
@@ -53,40 +46,38 @@ function AddPlacePopup(props) {
       onOverlay={props.onOverlay}
     >
       <input
+        name="name"
         type="text"
         className="popup__input"
-        id="container-title"
-        name="title"
         placeholder="Название"
         minLength="2"
         maxLength="30"
         required
-        value={name.value}
-        onChange={handleNameChange}
+        value={inputs.name.value}
+        onChange={handleInputChange}
       />
       <span
-        className={`popup__input-error container-title-error ${
-          name.isValid ? `` : `popup__input-error_visible`
+        className={`popup__input-error ${
+          inputs.name.isValid ? `` : `popup__input-error_visible`
         }`}
       >
-        {name.validationMessage}
+        {inputs.name.validationMessage}
       </span>
       <input
+        name="link"
         type="url"
         className="popup__input"
-        id="container-url"
-        name="url"
         placeholder="Ссылка на картинку"
         required
-        value={link.value}
-        onChange={handleLinkChange}
+        value={inputs.link.value}
+        onChange={handleInputChange}
       />
       <span
-        className={`popup__input-error container-url-error ${
-          link.isValid ? `` : `popup__input-error_visible`
+        className={`popup__input-error ${
+          inputs.link.isValid ? `` : `popup__input-error_visible`
         }`}
       >
-        {link.validationMessage}
+        {inputs.link.validationMessage}
       </span>
     </PopupWithForm>
   );

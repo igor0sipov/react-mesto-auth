@@ -1,10 +1,10 @@
-import { apiConfig } from "./constants";
+import baseUrl from "./config";
 
 class Api {
-  constructor(config) {
-    this._token = config.token;
-    this._userProfileUrl = config.userProfileUrl;
-    this._cardsUrl = config.cardsUrl;
+  constructor(url) {
+    this._baseUrl = url;
+    this._cardsUrl = this._baseUrl + "/cards/";
+    this._userProfileUrl = this._baseUrl + "/users/me/";
   }
 
   _handleOriginalResponse(result) {
@@ -14,23 +14,9 @@ class Api {
     return result;
   }
 
-  getUserInfo() {
-    return fetch(this._userProfileUrl, {
-      headers: {
-        authorization: this._token,
-      },
-    })
-      .then(this._handleOriginalResponse)
-      .then((data) => {
-        return data.json();
-      });
-  }
-
   getCards() {
     return fetch(this._cardsUrl, {
-      headers: {
-        authorization: this._token,
-      },
+      credentials: "include",
     })
       .then(this._handleOriginalResponse)
       .then((data) => {
@@ -40,14 +26,14 @@ class Api {
 
   editProfile({ name, about }) {
     return fetch(this._userProfileUrl, {
+      credentials: "include",
       method: "PATCH",
       headers: {
-        authorization: this._token,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: name,
-        about: about,
+        name,
+        about,
       }),
     })
       .then(this._handleOriginalResponse)
@@ -58,14 +44,14 @@ class Api {
 
   addCard({ name, link }) {
     return fetch(this._cardsUrl, {
+      credentials: "include",
       method: "POST",
       headers: {
-        authorization: this._token,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: name,
-        link: link,
+        name,
+        link,
       }),
     })
       .then(this._handleOriginalResponse)
@@ -76,10 +62,8 @@ class Api {
 
   deleteCard(id) {
     return fetch(this._cardsUrl + id, {
+      credentials: "include",
       method: "DELETE",
-      headers: {
-        authorization: this._token,
-      },
     })
       .then(this._handleOriginalResponse)
       .then((data) => {
@@ -88,11 +72,9 @@ class Api {
   }
 
   like(id) {
-    return fetch(this._cardsUrl + "likes/" + id, {
+    return fetch(this._cardsUrl + id + "/likes/", {
+      credentials: "include",
       method: "PUT",
-      headers: {
-        authorization: this._token,
-      },
     })
       .then(this._handleOriginalResponse)
       .then((data) => {
@@ -101,11 +83,9 @@ class Api {
   }
 
   removeLike(id) {
-    return fetch(this._cardsUrl + "likes/" + id, {
+    return fetch(this._cardsUrl + id + "/likes/", {
+      credentials: "include",
       method: "DELETE",
-      headers: {
-        authorization: this._token,
-      },
     })
       .then(this._handleOriginalResponse)
       .then((data) => {
@@ -115,9 +95,9 @@ class Api {
 
   updateAvatar(avatar) {
     return fetch(this._userProfileUrl + "avatar/", {
+      credentials: "include",
       method: "PATCH",
       headers: {
-        authorization: this._token,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -131,5 +111,5 @@ class Api {
   }
 }
 
-const api = new Api(apiConfig);
+const api = new Api(baseUrl);
 export default api;

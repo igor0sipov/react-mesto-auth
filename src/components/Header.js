@@ -4,7 +4,10 @@ function Header(props) {
   const currentLocation = useLocation().pathname;
   return (
     <header className="header header_spaced">
-      <Link className="header__logo" to="/"></Link>
+      <Link
+        className="header__logo"
+        to={`${props.loggedIn ? "/" : "/sign-in"}`}
+      ></Link>
       <div className="header__user-menu">
         {props.loggedIn ? (
           <>
