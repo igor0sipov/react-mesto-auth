@@ -132,7 +132,7 @@ function Register(props) {
           autoComplete="on"
           onChange={handleInputChange}
           minLength="2"
-          maxLength="32"
+          maxLength="1024"
           value={inputs.avatar.value}
         />
         <span
